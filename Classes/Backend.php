@@ -185,6 +185,20 @@ document.observe('dom:loaded', function()
             circle.setRadius(e.target.value * 1000);
         }
     );
+
+    // Update map if new latitude/longitude input is provided
+    document.getElementById('$inputId').observe(
+        'change', function(e) {
+            var values = e.target.value.split(',');
+            var lat    = parseFloat(values[0]);
+            var lon    = parseFloat(values[1]);
+            var latlon = new L.LatLng(lat, lon);
+
+            updatePosition(latlon, marker, circle);
+
+            map.panTo(latlon);
+        }
+    );
 });
 
 //]]>
