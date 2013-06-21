@@ -37,23 +37,32 @@ require_once PATH_tslib . 'class.tslib_pibase.php';
 class tx_contextsgeolocation_position extends tslib_pibase
 {
     /**
-     * @var string The extension key.
+     * The extension key.
+     *
+     * @var string
      */
     public $extKey = 'contexts_geolocation';
 
     /**
-     * @var string Same as class name.
+     * Same as class name.
+     *
+     * @var string
      */
     public $prefixId = __CLASS__;
 
     /**
-     * @var string Path to this script relative to the extension dir.
+     * Path to this script relative to the extension dir.
+     *
+     * @var string
      */
     public $scriptRelPath = 'pi/class.tx_contextsgeolocation_position.php';
 
+    /**
+     * Plugin is a USER_INT (page not cached).
+     *
+     * @var boolean
+     */
     public $pi_USER_INT_obj = true;
-
-
 
     /**
      * Plugin main function.
@@ -114,14 +123,15 @@ class tx_contextsgeolocation_position extends tslib_pibase
      */
     protected function renderForm($ip)
     {
-        $strIp = htmlspecialchars($ip);
+        $strIp     = htmlspecialchars($ip);
         $strPageId = htmlspecialchars($GLOBALS['TSFE']->id);
         $actionUrl = $this->pi_getPageLink($GLOBALS['TSFE']->id);
+
         return <<<HTM
 <form method="get" action="$actionUrl">
- <input type="hidden" name="id" value="$strPageId"/>
- <input type="text" size="16" name="ip" value="$strIp" placeholder="IP address"/>
- <input type="submit" value="Submit"/>
+    <input type="hidden" name="id" value="$strPageId" />
+    <input type="text" size="16" name="ip" value="$strIp" placeholder="IP address" />
+    <input type="submit" value="Submit" />
 </form>
 HTM;
     }
@@ -159,8 +169,8 @@ HTM;
 
         $flLat = (float) $data['latitude'];
         $flLon = (float) $data['longitude'];
-        $jLat = json_encode($flLat);
-        $jLon = json_encode($flLon);
+        $jLat  = json_encode($flLat);
+        $jLon  = json_encode($flLon);
         $jZoom = 8;
 
         return <<<HTM
@@ -174,25 +184,34 @@ HTM;
 #map { height: 300px; }
 </style>
 <script type="text/javascript">
-      $(document).ready(function()
+//<![CDATA[
+
+$(document).ready(function()
 {
-    var map = L.map("map").setView([$jLat, $jLon], 4);
+    // Create map and set view to chosen geographical coordinates
+    var map = L.map('map')
+        .setView([$jLat, $jLon], $jZoom);
 
     // create the tile layer with correct attribution
-    var osmUrl = "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
-    var subDomains = ['otile1','otile2','otile3','otile4'];
+    var osmUrl     = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg';
+    var subDomains = ['otile1', 'otile2', 'otile3', 'otile4'];
 
-    var osmAttrib = 'Data, imagery and map information provided by <a href="http://open.mapquest.co.uk" target="_blank">MapQuest</a>, <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> and contributors.';
-    var osm = new L.TileLayer(
-        osmUrl,
-        {attribution: osmAttrib, subdomains: subDomains}
-    );
+    var osmAttrib = 'Data, imagery and map information provided by'
+        + ' <a href="http://open.mapquest.co.uk" target="_blank">MapQuest</a>,'
+        + ' <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>'
+        + ' and contributors.';
 
-    // start the map in South-East England
-    map.setView(new L.LatLng($jLat, $jLon), $jZoom);
-    var marker = L.marker([$jLat, $jLon]).addTo(map);
-    map.addLayer(osm);
+    // Add tile layer
+    L.tileLayer(osmUrl, {
+        attribution : osmAttrib,
+        subdomains  : subDomains
+    }).addTo(map);
+
+    // Add marker of current coordinates
+    L.marker([$jLat, $jLon]).addTo(map);
 });
+
+//]]>
 </script>
 HTM;
     }
