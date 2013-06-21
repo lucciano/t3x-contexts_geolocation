@@ -167,7 +167,7 @@ document.observe('dom:loaded', function()
     ).addTo(map);
 
     // Handle dragging of marker
-    marker.on('dragend', function(e) {
+    marker.on('drag', function(e) {
         updatePosition(e.target.getLatLng(), null, circle);
     });
 
