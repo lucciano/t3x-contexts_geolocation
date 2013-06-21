@@ -173,18 +173,19 @@ HTM;
      */
     public function setupCheck()
     {
-        if (function_exists('geoip_country_code3_by_name')) {
+        if (extension_loaded('geoip')) {
             return;
         }
 
-        $o_flashMessage = t3lib_div::makeInstance(
-            't3lib_FlashMessage',
-            'The "<tt>geoip</tt>" PHP extension is not available.'
-            . ' Geolocation contexts will not work.',
-            'Geolocation configuration',
-            t3lib_FlashMessage::ERROR
+        t3lib_FlashMessageQueue::addMessage(
+            t3lib_div::makeInstance(
+                't3lib_FlashMessage',
+                'The "<tt>geoip</tt>" PHP extension is not available.'
+                . ' Geolocation contexts will not work.',
+                'Geolocation configuration',
+                t3lib_FlashMessage::ERROR
+            )
         );
-        t3lib_FlashMessageQueue::addMessage($o_flashMessage);
 
         return null;
     }

@@ -65,7 +65,14 @@ class tx_contextsgeolocation_position extends tslib_pibase
      */
     public function main($strContent, $arConf)
     {
-        $ip = $this->getIp();
+        if (!extension_loaded('geoip')) {
+            return $this->pi_wrapInBaseClass(
+                $strContent
+                . 'The "<strong>geoip</strong>" PHP extension is not available.'
+            );
+        }
+
+        $ip   = $this->getIp();
         $data = geoip_record_by_name($ip);
 
         return $this->pi_wrapInBaseClass(
