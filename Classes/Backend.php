@@ -67,9 +67,9 @@ class Tx_Contexts_Geolocation_Backend
                  ',',
                  $flex['data']['sDEF']['lDEF']['field_position']['vDEF']
              );
-             $lat = (float) trim($lat);
-             $lon = (float) trim($lon);
-             $jZoom = 9;
+             $lat      = (float) trim($lat);
+             $lon      = (float) trim($lon);
+             $jZoom    = 6;
              $inputVal = $flex['data']['sDEF']['lDEF']['field_position']['vDEF'];
         } else {
             // TODO: geoip current address
