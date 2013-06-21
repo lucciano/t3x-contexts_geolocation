@@ -164,11 +164,11 @@ HTM;
         $jZoom = 8;
 
         return <<<HTM
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+<link rel="stylesheet" href="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.css" />
 <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+    <link rel="stylesheet" href="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.ie.css" />
 <![endif]-->
-<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+<script src="/typo3conf/ext/contexts_geolocation/Resources/Public/JavaScript/Leaflet/leaflet.js"></script>
 <div id="map" style="margin: 10px 0px"></div>
 <style type="text/css">
 #map { height: 300px; }
