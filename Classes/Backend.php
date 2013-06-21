@@ -72,9 +72,10 @@ class Tx_Contexts_Geolocation_Backend
              $jZoom = 9;
              $inputVal = $flex['data']['sDEF']['lDEF']['field_position']['vDEF'];
         } else {
-            //FIXME: geoip current address
-            $lat = $lon = 0;
-            $jZoom = 4;
+            // TODO: geoip current address
+            $lat      = 51.33876;
+            $lon      = 12.3761;
+            $jZoom    = 4;
             $inputVal = '';
         }
 
@@ -107,56 +108,81 @@ $input<br/>
 <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 <div id="map"></div>
 <style type="text/css">
-#map { height: 300px; }
+#map { height: 400px; }
 </style>
 <script type="text/javascript">
+//<![CDATA[
+
+function updatePosition(latlng, marker, circle)
+{
+    var input = document.getElementById('$inputId');
+
+    input.value = latlng.lat + ", " + latlng.lng;
+    input.onchange();
+
+    if (marker !== null) {
+        marker.setLatLng(latlng);
+    }
+
+    if (circle !== null) {
+        circle.setLatLng(latlng);
+    }
+}
+
 document.observe('dom:loaded', function()
 {
-    var map = L.map("map").setView([51.505, -0.09], 4);
+    // Create the map
+    var map = L.map('map');
 
-    // create the tile layer with correct attribution
-    var osmUrl = "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
+    // Set view to chosen geographical coordinates
+    map.setView(new L.LatLng($jLat, $jLon), $jZoom);
+
+    // Create the tile layer with correct attribution
+    var osmUrl     = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg';
     var subDomains = ['otile1','otile2','otile3','otile4'];
 
-    var osmAttrib = 'Data, imagery and map information provided by <a href="http://open.mapquest.co.uk" target="_blank">MapQuest</a>, <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> and contributors.';
-    var osm = new L.TileLayer(
-        osmUrl,
-        {attribution: osmAttrib, subdomains: subDomains}
-    );
+    var osmAttrib = 'Data, imagery and map information provided by'
+        + ' <a href="http://open.mapquest.co.uk" target="_blank">MapQuest</a>,'
+        + ' <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>'
+        + ' and contributors.';
 
-    // start the map in South-East England
-    map.setView(new L.LatLng($jLat, $jLon), $jZoom);
+    // Add tile layer
+    L.tileLayer(osmUrl, {
+        attribution : osmAttrib,
+        subdomains  : subDomains
+    }).addTo(map);
+
+    // Add marker of current coordinates
     var marker = L.marker([$jLat, $jLon]).addTo(map);
     marker.dragging.enable();
-    map.addLayer(osm);
 
-
+    // Add distance circle
     var circle = L.circle(
         [$jLat, $jLon], $jRadius * 1000,
         {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.2
+            color       : 'red',
+            fillColor   : '#f03',
+            fillOpacity : 0.2
         }
     ).addTo(map);
 
+    // Handle dragging of marker
     marker.on('dragend', function(e) {
-        var latlng = e.target.getLatLng();
-        document.getElementById('$inputId').value
-            = latlng.lat + ", " + latlng.lng;
-        document.getElementById('$inputId').onchange();
-        circle.setLatLng(latlng);
+        updatePosition(e.target.getLatLng(), null, circle);
     });
 
     var distanceName = document.getElementById('$inputId').name.replace(
         'field_position', 'field_distance'
     );
+
     document.getElementsByName(distanceName)[0].observe(
         'change', function(e) {
             circle.setRadius(e.target.value * 1000);
         }
     );
 });
+
+//]]>
 </script>
 HTM;
 
