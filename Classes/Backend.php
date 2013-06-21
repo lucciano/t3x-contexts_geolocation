@@ -171,6 +171,11 @@ document.observe('dom:loaded', function()
         updatePosition(e.target.getLatLng(), null, circle);
     });
 
+    // Handle click on map
+    map.on('click', function(e) {
+        updatePosition(e.latlng, marker, circle);
+    });
+
     var distanceName = document.getElementById('$inputId').name.replace(
         'field_position', 'field_distance'
     );
