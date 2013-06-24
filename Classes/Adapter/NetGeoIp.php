@@ -161,8 +161,8 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public function getRegion()
     {
-        // @TODO Currently not available within Net_GeoIP
-        return false; //$this->geoLiteRegion->lookupRegion($this->ip);
+        // @TODO $this->geoLiteRegion->lookupRegion($this->ip);
+        return false;
     }
 
     /**
@@ -174,8 +174,8 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public function getOrganization()
     {
-        // @TODO Currently not available within Net_GeoIP
-        return false; // $this->geoLiteOrg->lookupOrg($this->ip);
+        // @TODO $this->geoLiteOrg->lookupOrg($this->ip);
+        return false;
     }
 }
 ?>
