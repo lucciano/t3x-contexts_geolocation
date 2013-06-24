@@ -26,6 +26,7 @@ require_once "Net/GeoIP.php";
  * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
+ * @uses       http://pear.php.net/package/Net_GeoIP/
  */
 class Tx_Contexts_Geolocation_Adapter_NetGeoIp
     extends Tx_Contexts_Geolocation_Adapter
@@ -120,7 +121,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
             }
 
             return $this->geoLiteCountry->lookupCountryCode($this->ip);
-       } catch (Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
     }

@@ -21,6 +21,7 @@
  * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
+ * @uses       http://www.php.net/manual/en/book.geoip.php
  */
 class Tx_Contexts_Geolocation_Adapter_GeoIp
     extends Tx_Contexts_Geolocation_Adapter
