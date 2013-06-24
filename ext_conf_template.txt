@@ -1,0 +1,8 @@
+# *****************************************************
+# Extension configuration for contexts_wurfl
+#
+# Author: Rico Sonntag <rico.sonntag@netresearch.de>
+# *****************************************************
+
+# cat=basic/file/; type=string; label=Path to copy of GeoLite database (Directory containing GeoIP.dat and GeoLiteCity.dat)
+geoLiteDatabase =

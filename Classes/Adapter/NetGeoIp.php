@@ -7,7 +7,7 @@
  * @category   TYPO3-Extensions
  * @package    Contexts
  * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
@@ -18,12 +18,12 @@
 require_once "Net/GeoIP.php";
 
 /**
- * Provides methods used in the backend by flexforms.
+ * Provides an adapter to the PEAR class "Net_GeoIP".
  *
  * @category   TYPO3-Extensions
  * @package    Contexts
  * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
@@ -35,14 +35,14 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      *
      * @var Net_GeoIP
      */
-    protected $netGeoIpCountry = null;
+    protected $geoLiteCountry = null;
 
     /**
      * Internal Net_GeoIP instance used for querying city database.
      *
      * @var Net_GeoIP
      */
-    protected $netGeoIpCity = null;
+    protected $geoLiteCity = null;
 
     /**
      * Constructor. Protected to prevent direct instanciation.
@@ -53,14 +53,17 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     protected function __construct($ip)
     {
-        $this->netGeoIpCountry = Net_GeoIP::getInstance(
-            PATH_site . 'typo3temp/GeoIP.dat/GeoIP.dat'
-        );
-        $this->netGeoIpCity = Net_GeoIP::getInstance(
-            PATH_site . 'typo3temp/GeoIP.dat/GeoLiteCity.dat'
+        // Get extension configuration
+        $extConfig = unserialize(
+            $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['contexts_geolocation']
         );
 
-        $this->ip = $ip;
+        // Get path to geolite database
+        $dbPath = PATH_site . ltrim($extConfig['geoLiteDatabase'], '/');
+
+        $this->geoLiteCountry = Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
+        $this->geoLiteCity    = Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
+        $this->ip             = $ip;
     }
 
     /**
@@ -87,7 +90,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public function getCountryCode()
     {
-        return $this->netGeoIpCountry->lookupCountryCode($this->ip);
+        return $this->geoLiteCountry->lookupCountryCode($this->ip);
     }
 
     /**
@@ -97,7 +100,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public function getCountryName()
     {
-        return $this->netGeoIpCountry->lookupCountryName($this->ip);
+        return $this->geoLiteCountry->lookupCountryName($this->ip);
     }
 
     /**
@@ -107,7 +110,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public function getLocation()
     {
-        return $this->netGeoIpCity->lookupLocation($this->ip)->getData();
+        return $this->geoLiteCity->lookupLocation($this->ip)->getData();
     }
 
     /**
@@ -118,7 +121,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
     public function getRegion()
     {
         // TODO
-        return null; //$this->netGeoIpCity->lookupRegion($this->ip);
+        return null; //$this->geoLiteCity->lookupRegion($this->ip);
     }
 
     /**
@@ -130,7 +133,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
     public function getOrganization()
     {
         // TODO
-        return null; // $this->netGeoIpCountry->lookupOrg($this->ip);
+        return null; // $this->geoLiteCountry->lookupOrg($this->ip);
     }
 }
 ?>

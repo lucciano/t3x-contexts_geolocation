@@ -7,18 +7,18 @@
  * @category   TYPO3-Extensions
  * @package    Contexts
  * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
 
 /**
- * Provides methods used in the backend by flexforms.
+ * Provides an adapter to the PHP "geoip" extension.
  *
  * @category   TYPO3-Extensions
  * @package    Contexts
  * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */

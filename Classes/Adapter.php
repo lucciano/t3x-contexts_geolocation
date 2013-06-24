@@ -7,18 +7,18 @@
  * @category   TYPO3-Extensions
  * @package    Contexts
  * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
 
 /**
- * Provides methods used in the backend by flexforms.
+ * Abstract base class for each adapter.
  *
  * @category   TYPO3-Extensions
  * @package    Contexts
  * @subpackage Geolocation
- * @author     Christian Weiske <christian.weiske@netresearch.de>
+ * @author     Rico Sonntag <rico.sonntag@netresearch.de>
  * @license    http://opensource.org/licenses/gpl-license GPLv2 or later
  * @link       http://github.com/netresearch/contexts_geolocation
  */
