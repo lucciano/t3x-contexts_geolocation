@@ -51,7 +51,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      *
      * @return void
      */
-    private function __construct($ip)
+    private function __construct($ip = null)
     {
         // Get extension configuration
         $extConfig = unserialize(
@@ -83,7 +83,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      *
      * @return Tx_Contexts_Geolocation_Adapter_NetGeoIp|null
      */
-    public static function getInstance($ip)
+    public static function getInstance($ip = null)
     {
         if (class_exists('Net_GeoIP', true)) {
             return new self($ip);
@@ -93,56 +93,89 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
     }
 
     /**
-     * Get two letter country code.
+     * Get two-letter continent code. Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
-    public function getCountryCode()
+    public function getContinentCode()
     {
-        return $this->geoLiteCountry->lookupCountryCode($this->ip);
+        // @TODO Currently not available within Net_GeoIP
+        return false;
     }
 
     /**
-     * Get country name.
+     * Get two or three letter country code. Returns FALSE on failure.
      *
-     * @return string
+     * @param boolean $threeLetterCode TRUE to return 3-letter country code
+     *
+     * @return string|false
+     */
+    public function getCountryCode($threeLetterCode = false)
+    {
+        try {
+            // Net_GeoIP provides no method to return 3-letter-code
+            if ($threeLetterCode) {
+                $data = $this->geoLiteCity->lookupLocation($this->ip)->getData();
+                return $data['countryCode3'];
+            }
+
+            return $this->geoLiteCountry->lookupCountryCode($this->ip);
+       } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    /**
+     * Get country name. Returns FALSE on failure.
+     *
+     * @return string|false
      */
     public function getCountryName()
     {
-        return $this->geoLiteCountry->lookupCountryName($this->ip);
+        try {
+            return $this->geoLiteCountry->lookupCountryName($this->ip);
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     /**
-     * Get location record.
+     * Get location record. Returns FALSE on failure.
      *
-     * @return array
+     * @return array|false
      */
     public function getLocation()
     {
-        return $this->geoLiteCity->lookupLocation($this->ip)->getData();
+        try {
+            return $this->geoLiteCity->lookupLocation($this->ip)->getData();
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     /**
      * Get country code and region. Required an non-free region database.
+     * Returns FALSE on failure.
      *
-     * @return array
+     * @return array|false
      */
     public function getRegion()
     {
-        // TODO
-        return null; //$this->geoLiteCity->lookupRegion($this->ip);
+        // @TODO Currently not available within Net_GeoIP
+        return false; //$this->geoLiteRegion->lookupRegion($this->ip);
     }
 
     /**
      * Get name of organization or of the ISP which has registered the
      * IP address range. Requires an non-free organisation database.
+     * Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
     public function getOrganization()
     {
-        // TODO
-        return null; // $this->geoLiteCountry->lookupOrg($this->ip);
+        // @TODO Currently not available within Net_GeoIP
+        return false; // $this->geoLiteOrg->lookupOrg($this->ip);
     }
 }
 ?>

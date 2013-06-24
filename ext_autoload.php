@@ -5,6 +5,8 @@ $extensionClassesPath = $extensionPath . 'Classes/';
 return array(
     'tx_contexts_geolocation_backend'
         => $extensionClassesPath . 'Backend.php',
+    'tx_contexts_geolocation_exception'
+        => $extensionClassesPath . 'Exception.php',
 
     // Adapter
     'tx_contexts_geolocation_adapter'

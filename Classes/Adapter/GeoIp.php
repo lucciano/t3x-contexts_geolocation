@@ -32,7 +32,7 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
      *
      * @return void
      */
-    private function __construct($ip)
+    private function __construct($ip = null)
     {
         $this->ip = $ip;
     }
@@ -54,7 +54,7 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
      *
      * @return Tx_Contexts_Geolocation_Adapter_GeoIp|null
      */
-    public static function getInstance($ip)
+    public static function getInstance($ip = null)
     {
         if (extension_loaded('geoip')) {
             return new self($ip);
@@ -64,19 +64,35 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
     }
 
     /**
-     * Get two letter country code.
+     * Get two-letter continent code. Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
-    public function getCountryCode()
+    public function getContinentCode()
     {
+        return geoip_continent_code_by_name($this->ip);
+    }
+
+    /**
+     * Get two or three letter country code. Returns FALSE on failure.
+     *
+     * @param boolean $threeLetterCode TRUE to return 3-letter country code
+     *
+     * @return string|false
+     */
+    public function getCountryCode($threeLetterCode = false)
+    {
+        if ($threeLetterCode) {
+            return geoip_country_code3_by_name($this->ip);
+        }
+
         return geoip_country_code_by_name($this->ip);
     }
 
     /**
-     * Get country name.
+     * Get country name. Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
     public function getCountryName()
     {
@@ -84,9 +100,9 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
     }
 
     /**
-     * Get location record.
+     * Get location record. Returns FALSE on failure.
      *
-     * @return array
+     * @return array|false
      */
     public function getLocation()
     {
@@ -109,9 +125,9 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
     }
 
     /**
-     * Get country code and region.
+     * Get country code and region. Returns FALSE on failure.
      *
-     * @return array
+     * @return array|false
      */
     public function getRegion()
     {
@@ -120,23 +136,13 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
 
     /**
      * Get name of organization or of the ISP which has registered the
-     * IP address range.
+     * IP address range. Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
     public function getOrganization()
     {
         return geoip_org_by_name($this->ip);
-    }
-
-    /**
-     * Get continent code.
-     *
-     * @return string
-     */
-    public function getContinentCode()
-    {
-        return geoip_continent_code_by_name();
     }
 }
 ?>

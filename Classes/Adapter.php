@@ -37,9 +37,9 @@ abstract class Tx_Contexts_Geolocation_Adapter
      * @param string $ip IP address
      *
      * @return Tx_Contexts_Geolocation_Adapter
-     * @throws Exception
+     * @throws Tx_Contexts_Geolocation_Exception
      */
-    public static function getInstance($ip)
+    public static function getInstance($ip = null)
     {
         static $instance = null;
 
@@ -57,7 +57,9 @@ abstract class Tx_Contexts_Geolocation_Adapter
             }
 
             if ($instance === null) {
-                throw new Exception('No installed geoip adapter found');
+                throw new Tx_Contexts_Geolocation_Exception(
+                    'No installed geoip adapter found'
+                );
             }
         }
 
@@ -86,40 +88,48 @@ abstract class Tx_Contexts_Geolocation_Adapter
         return $adapters;
     }
 
-
     /**
-     * Get two letter country code.
+     * Get two-letter continent code. Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
-    abstract public function getCountryCode();
+    abstract public function getContinentCode();
 
     /**
-     * Get country name.
+     * Get two or three letter country code. Returns FALSE on failure.
      *
-     * @return string
+     * @param boolean $threeLetterCode TRUE to return 3-letter country code
+     *
+     * @return string|false
+     */
+    abstract public function getCountryCode($threeLetterCode = false);
+
+    /**
+     * Get country name. Returns FALSE on failure.
+     *
+     * @return string|false
      */
     abstract public function getCountryName();
 
     /**
-     * Get location record.
+     * Get location record. Returns FALSE on failure.
      *
-     * @return array
+     * @return array|false
      */
     abstract public function getLocation();
 
     /**
-     * Get country code and region.
+     * Get country code and region. Returns FALSE on failure.
      *
-     * @return array
+     * @return array|false
      */
     abstract public function getRegion();
 
     /**
      * Get name of organization or of the ISP which has registered the
-     * IP address range.
+     * IP address range. Returns FALSE on failure.
      *
-     * @return string
+     * @return string|false
      */
     abstract public function getOrganization();
 }
