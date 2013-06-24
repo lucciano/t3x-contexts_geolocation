@@ -63,27 +63,31 @@ class Tx_Contexts_Geolocation_Context_Type_Country
      */
     public function matchCountries()
     {
-        if (!function_exists('geoip_country_code3_by_name')) {
-            //we show an error in backend when configuring the context
-            return false;
-        }
+        try {
+            $strCountries = trim($this->getConfValue('field_countries'));
 
-        $strCountries = trim($this->getConfValue('field_countries'));
-        if ($strCountries == '') {
-            //nothing configured? no match.
-            return false;
-        }
-        $arCountries = explode(',', $strCountries);
+            if ($strCountries == '') {
+                //nothing configured? no match.
+                return false;
+            }
 
-        $strCountry = geoip_country_code3_by_name(
-            $_SERVER['REMOTE_ADDR']
-        );
+            $geoip = Tx_Contexts_Geolocation_Adapter
+                ::getInstance($_SERVER['REMOTE_ADDR']);
 
-        if ($strCountry === false && in_array('*unknown*', $arCountries)) {
-            return true;
-        }
-        if ($strCountry !== false && in_array($strCountry, $arCountries)) {
-            return true;
+            $arCountries = explode(',', $strCountries);
+            $strCountry  = $geoip->getCountryCode(true);
+
+            if (($strCountry === false)
+                && in_array('*unknown*', $arCountries)
+            ) {
+                return true;
+            }
+            if (($strCountry !== false)
+                && in_array($strCountry, $arCountries)
+            ) {
+                return true;
+            }
+        } catch (Tx_Contexts_Geolocation_Exception $exception) {
         }
 
         return false;

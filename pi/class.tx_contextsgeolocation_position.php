@@ -65,18 +65,9 @@ class tx_contextsgeolocation_position extends tslib_pibase
      */
     public function main($strContent, $arConf)
     {
-//         $ip = $this->getIp();
-//         $data = geoip_record_by_name($ip);
-
         $ip    = $this->getIp();
         $geoip = Tx_Contexts_Geolocation_Adapter::getInstance($ip);
-
-var_dump($geoip->getLocation());
-var_dump($geoip->getCountryCode());
-var_dump($geoip->getCountryName());
-var_dump($geoip->getRegion());
-var_dump($geoip->getOrganization());
-exit;
+        $data  = $geoip->getLocation();
 
         return $this->pi_wrapInBaseClass(
             $strContent
@@ -140,7 +131,7 @@ HTM;
      * Renders the data we get from the geolocation database
      *
      * @param string $ip   IP number
-     * @param array  $data Array of data from geoip_record_by_name()
+     * @param array  $data Array of location data from geoip query
      *
      * @return string HTML code
      */
@@ -156,7 +147,7 @@ HTM;
      * Renders the map
      *
      * @param string $ip   IP number
-     * @param array  $data Array of data from geoip_record_by_name()
+     * @param array  $data Array of location data from geoip query
      *
      * @return string HTML code
      */

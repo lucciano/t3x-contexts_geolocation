@@ -65,37 +65,44 @@ class Tx_Contexts_Geolocation_Context_Type_Distance
      */
     public function matchDistance()
     {
-        if (!function_exists('geoip_record_by_name')) {
-            //we show an error in backend when configuring the context
+        try {
+            $geoip = Tx_Contexts_Geolocation_Adapter
+                ::getInstance($_SERVER['REMOTE_ADDR']);
+
+            $bUnknown   = (bool) $this->getConfValue('field_unknown');
+            $arPosition = $geoip->getLocation();
+
+            if ($arPosition === false) {
+                //unknown position
+                return $bUnknown;
+            }
+
+            if (($arPosition['latitude'] == 0)
+                && ($arPosition['longitude'] == 0)
+            ) {
+                //broken position
+                return $bUnknown;
+            }
+
+            $strPosition    = trim($this->getConfValue('field_position'));
+            $strMaxDistance = trim($this->getConfValue('field_distance'));
+
+            if (($strPosition == '') || ($strMaxDistance == '')) {
+                //nothing configured? no match.
+                return false;
+            }
+
+            list($reqLat, $reqLong) = explode(',', $strPosition);
+
+            $flDistance = $this->getDistance(
+                $reqLat, $reqLong,
+                $arPosition['latitude'], $arPosition['longitude']
+            );
+
+            return $flDistance <= ((float) $strMaxDistance);
+        } catch (Tx_Contexts_Geolocation_Exception $exception) {
             return false;
         }
-
-        $bUnknown = (bool) $this->getConfValue('field_unknown');
-        $arPosition = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
-        if ($arPosition === false) {
-            //unknown position
-            return $bUnknown;
-        }
-        if ($arPosition['latitude'] == 0 && $arPosition['longitude'] == 0) {
-            //broken position
-            return $bUnknown;
-        }
-
-        $strPosition = trim($this->getConfValue('field_position'));
-        $strMaxDistance = trim($this->getConfValue('field_distance'));
-        if ($strPosition == '' || $strMaxDistance == '') {
-            //nothing configured? no match.
-            return false;
-        }
-
-        list($reqLat, $reqLong) = explode(',', $strPosition);
-
-        $flDistance = $this->getDistance(
-            $reqLat, $reqLong,
-            $arPosition['latitude'], $arPosition['longitude']
-        );
-
-        return $flDistance <= (float) $strMaxDistance;
     }
 
     /**

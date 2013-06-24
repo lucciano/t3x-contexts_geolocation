@@ -63,27 +63,32 @@ class Tx_Contexts_Geolocation_Context_Type_Continent
      */
     public function matchContinents()
     {
-        if (!function_exists('geoip_continent_code_by_name')) {
-            //we show an error in backend when configuring the context
-            return false;
-        }
+        try {
+            $strContinents = trim($this->getConfValue('field_continents'));
 
-        $strContinents = trim($this->getConfValue('field_continents'));
-        if ($strContinents == '') {
-            //nothing configured? no match.
-            return false;
-        }
-        $arContinents = explode(',', $strContinents);
+            if ($strContinents == '') {
+                //nothing configured? no match.
+                return false;
+            }
 
-        $strContinent = geoip_continent_code_by_name(
-            $_SERVER['REMOTE_ADDR']
-        );
+            $geoip = Tx_Contexts_Geolocation_Adapter
+                ::getInstance($_SERVER['REMOTE_ADDR']);
 
-        if ($strContinent === false && in_array('*unknown*', $arContinents)) {
-            return true;
-        }
-        if ($strContinent !== false && in_array($strContinent, $arContinents)) {
-            return true;
+            $arContinents = explode(',', $strContinents);
+            $strContinent = $geoip->getContinentCode();
+
+            if (($strContinent === false)
+                && in_array('*unknown*', $arContinents)
+            ) {
+                return true;
+            }
+
+            if (($strContinent !== false)
+                && in_array($strContinent, $arContinents)
+            ) {
+                return true;
+            }
+        } catch (Tx_Contexts_Geolocation_Exception $exception) {
         }
 
         return false;
