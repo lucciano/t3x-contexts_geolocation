@@ -32,9 +32,18 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
      *
      * @return void
      */
-    protected function __construct($ip)
+    private function __construct($ip)
     {
         $this->ip = $ip;
+    }
+
+    /**
+     * Prevent cloning of class.
+     *
+     * @return void
+     */
+    private function __clone()
+    {
     }
 
     /**

@@ -51,7 +51,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      *
      * @return void
      */
-    protected function __construct($ip)
+    private function __construct($ip)
     {
         // Get extension configuration
         $extConfig = unserialize(
@@ -64,6 +64,15 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
         $this->geoLiteCountry = Net_GeoIP::getInstance($dbPath . 'GeoIP.dat');
         $this->geoLiteCity    = Net_GeoIP::getInstance($dbPath . 'GeoLiteCity.dat');
         $this->ip             = $ip;
+    }
+
+    /**
+     * Prevent cloning of class.
+     *
+     * @return void
+     */
+    private function __clone()
+    {
     }
 
     /**
