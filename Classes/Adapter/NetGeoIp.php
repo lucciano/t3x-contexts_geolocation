@@ -76,7 +76,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      *
      * @return boolean
      *
-     * TODO USer PEAR_Registry if possible
+     * TODO Use PEAR_Registry if possible
      */
     protected static function checkPear()
     {
