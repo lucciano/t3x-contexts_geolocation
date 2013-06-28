@@ -58,7 +58,7 @@ class Tx_Contexts_Geolocation_Adapter_GeoIp
     public static function getInstance($ip = null)
     {
         if (extension_loaded('geoip')) {
-//             return new self($ip);
+            return new self($ip);
         }
 
         return null;
