@@ -13,11 +13,6 @@
  */
 
 /**
- * Includes
- */
-require_once "Net/GeoIP.php";
-
-/**
  * Provides an adapter to the PEAR class "Net_GeoIP".
  *
  * @category   TYPO3-Extensions
@@ -77,6 +72,21 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
     }
 
     /**
+     * Returns TRUE if extension is available with in PEAR.
+     *
+     * @return boolean
+     *
+     * TODO USer PEAR_Registry if possible
+     */
+    protected static function checkPear()
+    {
+        // Try to include PEAR extension, Suppress E_WARNING message
+        $result = @include_once "Net/GeoIP.php";
+
+        return (bool) $result;
+    }
+
+    /**
      * Get instance of class. Returns null if the Net_GeoIP class is
      * not available.
      *
@@ -86,7 +96,7 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public static function getInstance($ip = null)
     {
-        if (class_exists('Net_GeoIP', true)) {
+        if (self::checkPear() && class_exists('Net_GeoIP', true)) {
             return new self($ip);
         }
 
