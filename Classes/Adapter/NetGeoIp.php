@@ -110,7 +110,12 @@ class Tx_Contexts_Geolocation_Adapter_NetGeoIp
      */
     public function getContinentCode()
     {
-        // @TODO Currently not available within Net_GeoIP
+        // Use forked edition: https://github.com/netresearch/Net_GeoIP
+        if (method_exists($this->geoLiteCountry, 'lookupContinentCode')) {
+            return $this->geoLiteCountry->lookupContinentCode($this->ip);
+        }
+
+        // Currently not available within official Net_GeoIP package
         return false;
     }
 
